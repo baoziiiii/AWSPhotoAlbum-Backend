@@ -9,7 +9,6 @@ from requests_aws4auth import AWS4Auth
 
 s3 = boto3.client("s3")
 
-
 def list_picture(key,labels): 
     r = {}
     # label = ''.join(key.rsplit(key.split("-")[-1],1))[:-1].replace('images/','',1) # TOCHANGE: label暂时是从文件名提取
