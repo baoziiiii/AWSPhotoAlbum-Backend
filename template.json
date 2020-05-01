@@ -106,7 +106,10 @@
         "p3LF1": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
-                "CodeUri": "./p3LF1",
+                "Code": {
+                    "S3Bucket": "p3code",
+                    "S3Key": "p3LF1.zip"
+                },
                 "FunctionName": "p3LF1_release",
                 "Handler": "lambda_function.lambda_handler",
                 "Role": "arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped",
@@ -122,7 +125,10 @@
         "p3LF2": {
             "Type": "AWS::Lambda::Function",
             "Properties": {
-                "CodeUri": "./p3LF2",
+                "Code": {
+                    "S3Bucket": "p3code",
+                    "S3Key": "p3LF2.zip"
+                },
                 "FunctionName": "p3LF2_release",
                 "Handler": "lambda_function.lambda_handler",
                 "Role": "arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg",
