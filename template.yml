@@ -74,7 +74,7 @@ Resources:
         id: b640ca73-bf4e-4e2d-ba3e-5c9dd3a79d53
     DeletionPolicy: Retain
   p3LF1:
-    Type: 'AWS::Lambda::Function'
+    Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: ./p3LF1
       FunctionName: p3LF1_release
@@ -86,7 +86,7 @@ Resources:
         id: 09b9d44d-eb16-4b1f-bf69-bd37767d297a
     DeletionPolicy: Retain
   p3LF2:
-    Type: 'AWS::Lambda::Function'
+    Type: 'AWS::Serverless::Function'
     Properties:
       CodeUri: ./p3LF2
       FunctionName: p3LF2_release
