@@ -64,8 +64,8 @@ def lambda_handler(event, context):
     # print(event)
     
     # connect to vpc
-    # host = 'vpc-photos2-wc7ewp7gezc7jkxe5sumk4wxni.us-east-1.es.amazonaws.com' 
-    host = 'vpc-photos4-qircgu67ftakri6xjsbsuvwqca.us-east-1.es.amazonaws.com'
+    host = 'vpc-photos2-wc7ewp7gezc7jkxe5sumk4wxni.us-east-1.es.amazonaws.com' 
+    # host = 'vpc-photos4-qircgu67ftakri6xjsbsuvwqca.us-east-1.es.amazonaws.com'
     region = 'us-east-1' # e.g. us-west-1
     
     # connect to es
