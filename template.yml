@@ -19,7 +19,7 @@ Resources:
       DeploymentId: q6357z
     DeletionPolicy: Retain
   p3LF1:
-    Type: 'AWS::Serverless::Function'
+    Type: 'AWS::Lambda::Function'
     Properties:
       S3Bucket: p3code
       S3Key: p3LF1.zip
@@ -29,7 +29,7 @@ Resources:
       Runtime: python3.7
     DeletionPolicy: Retain
   p3LF2:
-    Type: 'AWS::Serverless::Function'
+    Type: 'AWS::Lambda::Function'
     Properties:
       S3Bucket: p3code
       S3Key: p3LF2.zip
