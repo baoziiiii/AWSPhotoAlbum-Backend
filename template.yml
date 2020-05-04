@@ -6,6 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_function.lambda_handler
+      FunctionName: p3LF1_release
       Runtime: python3.7
       Role: arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped
       CodeUri: ./p3LF1
@@ -13,6 +14,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: lambda_function.lambda_handler
+      FunctionName: p3LF2_release
       Runtime: python3.7
       Role: arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg
       CodeUri: ./p3LF2
