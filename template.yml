@@ -1,20 +1,160 @@
-AWSTemplateFormatVersion: '2010-09-09'
-Transform: AWS::Serverless-2016-10-31
-Description: Outputs the time
+AWSTemplateFormatVersion: 2010-09-09
+Metadata:
+  'AWS::CloudFormation::Designer':
+    d379da67-6435-4244-84ce-0223be46a52d:
+      size:
+        width: 420
+        height: 330
+      position:
+        x: 60
+        'y': 90
+      z: 1
+      embeds:
+        - e53a720b-7a73-4749-a175-19d342334278
+        - 1bfa658f-fa95-4c5f-95df-35d7ead73d3f
+    e53a720b-7a73-4749-a175-19d342334278:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 300
+        'y': 150
+      z: 2
+      parent: d379da67-6435-4244-84ce-0223be46a52d
+      embeds: []
+      iscontainedinside:
+        - d379da67-6435-4244-84ce-0223be46a52d
+    1bfa658f-fa95-4c5f-95df-35d7ead73d3f:
+      size:
+        width: 150
+        height: 150
+      position:
+        x: 90
+        'y': 150
+      z: 2
+      parent: d379da67-6435-4244-84ce-0223be46a52d
+      embeds: []
+      iscontainedinside:
+        - d379da67-6435-4244-84ce-0223be46a52d
+    c270876f-20b4-4839-9026-6981fe6047b0:
+      size:
+        width: 60
+        height: 60
+      position:
+        x: 60
+        'y': 480
+      z: 1
+      embeds: []
 Resources:
+  p3b1:
+    Type: 'AWS::S3::Bucket'
+    Properties:
+      AccessControl: PublicRead
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: error.html
+    DeletionPolicy: Retain
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 35804fa0-d149-4713-b9b0-bb3cbee5944f
+  p3b2:
+    Type: 'AWS::S3::Bucket'
+    Properties: {}
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 05eeef23-6342-4e1a-ba4d-6811c012d554
+    DeletionPolicy: Retain
+  api:
+    Type: 'AWS::ApiGateway::Stage'
+    Properties:
+      RestApiId: a5v1z7waqb
+      DeploymentId: q6357z
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: b640ca73-bf4e-4e2d-ba3e-5c9dd3a79d53
+    DeletionPolicy: Retain
   p3LF1:
-    Type: AWS::Serverless::Function
+    Type: 'AWS::Lambda::Function'
     Properties:
-      Handler: lambda_function.lambda_handler
-      FunctionName: p3LF1_release
-      Runtime: python3.7
-      Role: arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped
       CodeUri: ./p3LF1
-  p3LF2:
-    Type: AWS::Serverless::Function
-    Properties:
+      FunctionName: p3LF1_release
       Handler: lambda_function.lambda_handler
-      FunctionName: p3LF2_release
+      Role: 'arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped'
       Runtime: python3.7
-      Role: arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 09b9d44d-eb16-4b1f-bf69-bd37767d297a
+    DeletionPolicy: Retain
+  p3LF2:
+    Type: 'AWS::Lambda::Function'
+    Properties:
       CodeUri: ./p3LF2
+      FunctionName: p3LF2_release
+      Handler: lambda_function.lambda_handler
+      Role: 'arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg'
+      Runtime: python3.7
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c76db28d-61aa-413b-a96c-d0360d3eed0c
+    DeletionPolicy: Retain
+  ElasticsearchDomain:
+    Type: 'AWS::Elasticsearch::Domain'
+    Properties:
+      DomainName: photos10
+      ElasticsearchVersion: '7.4'
+      ElasticsearchClusterConfig:
+        InstanceCount: '1'
+        InstanceType: t2.small.elasticsearch
+      EBSOptions:
+        EBSEnabled: 'true'
+        Iops: 0
+        VolumeSize: 10
+        VolumeType: standard
+      SnapshotOptions:
+        AutomatedSnapshotStartHour: '0'
+      AccessPolicies:
+        Version: 2012-10-17
+        Statement:
+          - Effect: Allow
+            Principal:
+              AWS: '*'
+            Action: 'es:*'
+            Resource: 'arn:aws:es:us-east-1:591736655990:domain/photos/*'
+      VPCOptions:
+        SubnetIds:
+          - !Ref subnet
+        SecurityGroupIds:
+          - !Ref mySecurityGroup
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: c270876f-20b4-4839-9026-6981fe6047b0
+  vpc:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 13.0.0.0/16
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: d379da67-6435-4244-84ce-0223be46a52d
+  subnet:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref vpc
+      CidrBlock: 13.0.0.0/24
+      AvailabilityZone: us-east-1a
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: 1bfa658f-fa95-4c5f-95df-35d7ead73d3f
+  mySecurityGroup:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: sg_cf_hw3
+      VpcId: !Ref vpc
+      GroupName: sg_cf_hw3
+      SecurityGroupIngress:
+        - FromPort: '443'
+          IpProtocol: tcp
+          ToPort: '443'
+          CidrIp: 13.0.0.0/24
+    Metadata:
+      'AWS::CloudFormation::Designer':
+        id: e53a720b-7a73-4749-a175-19d342334278
