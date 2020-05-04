@@ -6,7 +6,7 @@ import time
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
-//aaa
+# aaa
 
 s3 = boto3.client("s3")
 
