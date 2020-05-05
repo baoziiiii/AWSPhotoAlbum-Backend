@@ -682,6 +682,7 @@ Resources:
         - 'arn:aws:iam::aws:policy/AmazonS3FullAccess'
         - 'arn:aws:iam::aws:policy/AWSCodeBuildAdminAccess'
         - 'arn:aws:iam::aws:policy/AWSCloudFormationFullAccess'
+        - 'arn:aws:iam::aws:policy/IAMFullAccess'
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 0e9f3e17-f688-46f4-ae52-0657bfbe0057
