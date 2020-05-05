@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF1
-      FunctionName: p3LF1_release
+      FunctionName: ST5LF1
       Handler: lambda_function.lambda_handler
       Role: 'arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped'
       Runtime: python3.7
@@ -15,7 +15,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF2
-      FunctionName: p3LF2_release
+      FunctionName: ST5LF2
       Handler: lambda_function.lambda_handler
       Role: 'arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg'
       Runtime: python3.7
@@ -24,92 +24,92 @@ Resources:
 
 # AWSTemplateFormatVersion: 2010-09-09
 # Resources:
-#   # p3b1:
-#   #   Type: 'AWS::S3::Bucket'
-#   #   Properties:
-#   #     AccessControl: PublicRead
-#   #     WebsiteConfiguration:
-#   #       IndexDocument: index.html
-#   #       ErrorDocument: error.html
-#   #   DeletionPolicy: Retain
-#   # p3b2:
-#   #   Type: 'AWS::S3::Bucket'
-#   #   Properties: {}
-#   #   DeletionPolicy: Retain
-#   # api:
-#   #   Type: 'AWS::ApiGateway::Stage'
-#   #   Properties:
-#   #     RestApiId: a5v1z7waqb
-#   #     DeploymentId: q6357z
-#   #   DeletionPolicy: Retain
-#   p3LF1:
-#     Type: 'AWS::Lambda::Function'
-#     Properties:
-#       Code:
-#         S3Bucket: p3code
-#         S3Key: p3LF1.zip
-#       FunctionName: p3LF1_release
-#       Handler: lambda_function.lambda_handler
-#       Role: 'arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped'
-#       Runtime: python3.7
-#     DeletionPolicy: Retain
-#   p3LF2:
-#     Type: 'AWS::Lambda::Function'
-#     Properties:
-#       Code:
-#         S3Bucket: p3code
-#         S3Key: p3LF2.zip
-#       FunctionName: p3LF2_release
-#       Handler: lambda_function.lambda_handler
-#       Role: 'arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg'
-#       Runtime: python3.7
-#     DeletionPolicy: Retain
-#   # ElasticsearchDomain:
-#   #   Type: 'AWS::Elasticsearch::Domain'
-#   #   Properties:
-#   #     DomainName: photos10
-#   #     ElasticsearchVersion: '7.4'
-#   #     ElasticsearchClusterConfig:
-#   #       InstanceCount: '1'
-#   #       InstanceType: t2.small.elasticsearch
-#   #     EBSOptions:
-#   #       EBSEnabled: 'true'
-#   #       Iops: 0
-#   #       VolumeSize: 10
-#   #       VolumeType: standard
-#   #     SnapshotOptions:
-#   #       AutomatedSnapshotStartHour: '0'
-#   #     AccessPolicies:
-#   #       Version: 2012-10-17
-#   #       Statement:
-#   #         - Effect: Allow
-#   #           Principal:
-#   #             AWS: '*'
-#   #           Action: 'es:*'
-#   #           Resource: 'arn:aws:es:us-east-1:591736655990:domain/photos/*'
-#   #     VPCOptions:
-#   #       SubnetIds:
-#   #         - !Ref subnet
-#   #       SecurityGroupIds:
-#   #         - !Ref mySecurityGroup
-#   # vpc:
-#   #   Type: 'AWS::EC2::VPC'
-#   #   Properties:
-#   #     CidrBlock: 13.0.0.0/16
-#   # subnet:
-#   #   Type: 'AWS::EC2::Subnet'
-#   #   Properties:
-#   #     VpcId: !Ref vpc
-#   #     CidrBlock: 13.0.0.0/24
-#   #     AvailabilityZone: us-east-1a
-#   # mySecurityGroup:
-#   #   Type: 'AWS::EC2::SecurityGroup'
-#   #   Properties:
-#   #     GroupDescription: sg_cf_hw3
-#   #     VpcId: !Ref vpc
-#   #     GroupName: sg_cf_hw3
-#   #     SecurityGroupIngress:
-#   #       - FromPort: '443'
-#   #         IpProtocol: tcp
-#   #         ToPort: '443'
-#   #         CidrIp: 13.0.0.0/24
+  # p3b1:
+  #   Type: 'AWS::S3::Bucket'
+  #   Properties:
+  #     AccessControl: PublicRead
+  #     WebsiteConfiguration:
+  #       IndexDocument: index.html
+  #       ErrorDocument: error.html
+  #   DeletionPolicy: Retain
+  # p3b2:
+  #   Type: 'AWS::S3::Bucket'
+  #   Properties: {}
+  #   DeletionPolicy: Retain
+  # api:
+  #   Type: 'AWS::ApiGateway::Stage'
+  #   Properties:
+  #     RestApiId: a5v1z7waqb
+  #     DeploymentId: q6357z
+  #   DeletionPolicy: Retain
+  # p3LF1:
+  #   Type: 'AWS::Lambda::Function'
+  #   Properties:
+  #     Code:
+  #       S3Bucket: p3code
+  #       S3Key: p3LF1.zip
+  #     FunctionName: p3LF1_release
+  #     Handler: lambda_function.lambda_handler
+  #     Role: 'arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped'
+  #     Runtime: python3.7
+  #   DeletionPolicy: Retain
+  # p3LF2:
+  #   Type: 'AWS::Lambda::Function'
+  #   Properties:
+  #     Code:
+  #       S3Bucket: p3code
+  #       S3Key: p3LF2.zip
+  #     FunctionName: p3LF2_release
+  #     Handler: lambda_function.lambda_handler
+  #     Role: 'arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg'
+  #     Runtime: python3.7
+  #   DeletionPolicy: Retain
+  # ElasticsearchDomain:
+  #   Type: 'AWS::Elasticsearch::Domain'
+  #   Properties:
+  #     DomainName: photos10
+  #     ElasticsearchVersion: '7.4'
+  #     ElasticsearchClusterConfig:
+  #       InstanceCount: '1'
+  #       InstanceType: t2.small.elasticsearch
+  #     EBSOptions:
+  #       EBSEnabled: 'true'
+  #       Iops: 0
+  #       VolumeSize: 10
+  #       VolumeType: standard
+  #     SnapshotOptions:
+  #       AutomatedSnapshotStartHour: '0'
+  #     AccessPolicies:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             AWS: '*'
+  #           Action: 'es:*'
+  #           Resource: 'arn:aws:es:us-east-1:591736655990:domain/photos/*'
+  #     VPCOptions:
+  #       SubnetIds:
+  #         - !Ref subnet
+  #       SecurityGroupIds:
+  #         - !Ref mySecurityGroup
+  # vpc:
+  #   Type: 'AWS::EC2::VPC'
+  #   Properties:
+  #     CidrBlock: 13.0.0.0/16
+  # subnet:
+  #   Type: 'AWS::EC2::Subnet'
+  #   Properties:
+  #     VpcId: !Ref vpc
+  #     CidrBlock: 13.0.0.0/24
+  #     AvailabilityZone: us-east-1a
+  # mySecurityGroup:
+  #   Type: 'AWS::EC2::SecurityGroup'
+  #   Properties:
+  #     GroupDescription: sg_cf_hw3
+  #     VpcId: !Ref vpc
+  #     GroupName: sg_cf_hw3
+  #     SecurityGroupIngress:
+  #       - FromPort: '443'
+  #         IpProtocol: tcp
+  #         ToPort: '443'
+  #         CidrIp: 13.0.0.0/24
