@@ -6,7 +6,7 @@ import time
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
-# aaaaaaa
+
 
 s3 = boto3.client("s3")
 
@@ -22,7 +22,6 @@ def list_picture(key,labels):
     key = key.replace(" ", "+")
     r['Path'] = 'https://p3b2.s3.amazonaws.com/images/'+key
     return r
-
 
 
 ## IMPORTANT: get picture raw binary data
