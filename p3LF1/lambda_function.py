@@ -6,6 +6,7 @@ from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
 
+
 def detect_labels(photo, bucket):
 
     client=boto3.client('rekognition')
