@@ -64,11 +64,11 @@ Mappings:
 Resources:
   S3Frontend:
     Type: 'AWS::S3::Bucket'
-    BucketName: !FindInMap
+    Properties:
+      BucketName: !FindInMap
                   - Configuration
                   - S3FrontendBucketName
                   - Value
-    Properties:
       AccessControl: PublicRead
       WebsiteConfiguration:
         IndexDocument: index.html
@@ -101,7 +101,8 @@ Resources:
         id: 2e11d1e0-1092-40e3-a50e-7f09d9e80fd7
   S3Image:
     Type: 'AWS::S3::Bucket'
-    BucketName: !FindInMap
+    Properties: 
+      BucketName: !FindInMap
                   - Configuration
                   - S3ImageBucketName
                   - Value
