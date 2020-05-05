@@ -8,7 +8,6 @@ Resources:
       CodeUri: ./p3LF1
       FunctionName: st8lf1
       Handler: lambda_function.lambda_handler
-      Role: 'arn:aws:iam::591736655990:role/service-role/p3LF1-role-nvlilped'
       Runtime: python3.7
     DeletionPolicy: Retain
   p3LF2:
@@ -17,6 +16,5 @@ Resources:
       CodeUri: ./p3LF2
       FunctionName: st8lf2
       Handler: lambda_function.lambda_handler
-      Role: 'arn:aws:iam::591736655990:role/service-role/p3LF2-role-3tucnatg'
       Runtime: python3.7
     DeletionPolicy: Retain
