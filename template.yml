@@ -13,36 +13,61 @@ Description: >-
   by clicking on the check box acknowledging that you understand this template
   creates IAM resources or by specifying the CAPABILITY_IAM flag to the
   cfn-create-stack command line tool or CreateStack API call. 
-Parameters:
-  MyGitHubAuthToken:
-    NoEcho: 'true'
-    Type: String
-    Description: Github Password
-    MinLength: '1'
-    MaxLength: '41'
-    ConstraintDescription: the password must be between 1 and 41 characters
-  S3FrontendBucketName:
-    Type: String
-  S3ImageBucketName:
-    Type: String
-  LambdaFunctionName:
-    Type: String
-  CIDR:
-    Type: String
-  APIThrottlingRate:
-    Type: Number
-    MinValue: 1
-    MaxValue: 1000
-    Description: Max API requests per second.
-  MyGitHubAccountName:
-    Type: String
-  MyGitHubFrontendRepositoryName:
-    Type: String
-  MyGitHubBackendRepositoryName:
-    Type: String
+  
+Mappings: 
+  Configuration: 
+    MyGitHubAccountName:
+      "Value": "Baoziiiii"
+    MyGitHubAuthToken:
+      "Value": "a452651705"
+    S3FrontendBucketName: 
+      "Value": "P3Frontend-Bz88J7zHshM7"
+    S3ImageBucketName:
+      "Value": "P3Backend-AJDbR0yG6zU6	"
+    LambdaFunctionName: 
+      "Value": "st8lf"
+    CIDR: 
+      "Value": "16.0.0.0"
+    APIThrottlingRate: 
+      "Value": 10
+    MyGitHubFrontendRepositoryName: 
+      "Value": "AWSPhotoAlbum-Frontend"
+    MyGitHubBackendRepositoryName:
+      "Value": "AWSPhotoAlbum-Backend"
+# Parameters:
+#   MyGitHubAuthToken:
+#     NoEcho: 'true'
+#     Type: String
+#     Description: Github Password
+#     MinLength: '1'
+#     MaxLength: '41'
+#     ConstraintDescription: the password must be between 1 and 41 characters
+#   S3FrontendBucketName:
+#     Type: String
+#   S3ImageBucketName:
+#     Type: String
+#   LambdaFunctionName:
+#     Type: String
+#   CIDR:
+#     Type: String
+#   APIThrottlingRate:
+#     Type: Number
+#     MinValue: 1
+#     MaxValue: 1000
+#     Description: Max API requests per second.
+#   MyGitHubAccountName:
+#     Type: String
+#   MyGitHubFrontendRepositoryName:
+#     Type: String
+#   MyGitHubBackendRepositoryName:
+#     Type: String
 Resources:
   S3Frontend:
     Type: 'AWS::S3::Bucket'
+    BucketName: !FindInMap
+                  - Configuration
+                  - S3FrontendBucketName
+                  - Value
     Properties:
       AccessControl: PublicRead
       WebsiteConfiguration:
@@ -76,6 +101,10 @@ Resources:
         id: 2e11d1e0-1092-40e3-a50e-7f09d9e80fd7
   S3Image:
     Type: 'AWS::S3::Bucket'
+        BucketName: !FindInMap
+                      - Configuration
+                      - S3ImageBucketName
+                      - Value
     # Properties:
     #   LambdaConfiguration:
     #     Event: 's3:ObjectCreated:Put'
@@ -158,8 +187,14 @@ Resources:
         - ApiId: !Ref RestAPI
           Stage: !Ref Prod
       Throttle:
-        BurstLimit: !Ref APIThrottlingRate
-        RateLimit: !Ref APIThrottlingRate
+        BurstLimit: !FindInMap
+          - Configuration
+          - APIThrottlingRate
+          - Value
+        RateLimit: !FindInMap
+          - Configuration
+          - APIThrottlingRate
+          - Value
       UsagePlanName: MyUsagePlan
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -374,7 +409,10 @@ Resources:
                 uri: !Join 
                   - ''
                   - - 'arn:aws:apigateway:us-east-1:s3:path/'
-                    - !Ref S3ImageBucketName
+                    - !FindInMap
+                      - Configuration
+                      - S3ImageBucketName
+                      - Value
                     - '{folder}/{item}'
                 responses:
                   default:
@@ -497,14 +535,26 @@ Resources:
           HttpMethod: GET
           MetricsEnabled: 'true'
           DataTraceEnabled: 'true'
-          ThrottlingBurstLimit: !Ref APIThrottlingRate
-          ThrottlingRateLimit: !Ref APIThrottlingRate
+          ThrottlingBurstLimit: !FindInMap
+                  - Configuration
+                  - APIThrottlingRate
+                  - Value
+          ThrottlingRateLimit: !FindInMap
+                  - Configuration
+                  - APIThrottlingRate
+                  - Value
         - ResourcePath: /upload
           HttpMethod: PUT
           MetricsEnabled: 'true'
           DataTraceEnabled: 'true'
-          ThrottlingBurstLimit: !Ref APIThrottlingRate
-          ThrottlingRateLimit: !Ref APIThrottlingRate
+          ThrottlingBurstLimit: !FindInMap
+                  - Configuration
+                  - APIThrottlingRate
+                  - Value 
+          ThrottlingRateLimit: !FindInMap
+                  - Configuration
+                  - APIThrottlingRate
+                  - Value 
     Metadata:
       'AWS::CloudFormation::Designer':
         id: 4ae3908c-8191-4da4-827a-777190dc348e
@@ -553,7 +603,10 @@ Resources:
         ZipFile: none
       FunctionName: !Join 
         - ''
-        - - !Ref LambdaFunctionName
+        - - !FindInMap
+                  - Configuration
+                  - LambdaFunctionName
+                  - Value 
           - '1'
       Handler: lambda_function.lambda_handler
       Role: !GetAtt 
@@ -576,7 +629,10 @@ Resources:
         ZipFile: none
       FunctionName: !Join 
         - ''
-        - - !Ref LambdaFunctionName
+        - - !FindInMap
+                  - Configuration
+                  - LambdaFunctionName
+                  - Value 
           - '2'
       Handler: lambda_function.lambda_handler
       Role: !GetAtt 
@@ -627,7 +683,10 @@ Resources:
     Properties:
       CidrBlock: !Join 
         - /
-        - - !Ref CIDR
+        - - !FindInMap
+                  - Configuration
+                  - CIDR
+                  - Value 
           - '16'
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -638,7 +697,10 @@ Resources:
       VpcId: !Ref vpc
       CidrBlock: !Join 
         - /
-        - - !Ref CIDR
+        - - !FindInMap
+                  - Configuration
+                  - CIDR
+                  - Value 
           - '24'
       AvailabilityZone: us-east-1a
     Metadata:
@@ -656,7 +718,10 @@ Resources:
           ToPort: '443'
           CidrIp: !Join 
             - /
-            - - !Ref CIDR
+            - - !FindInMap
+                  - Configuration
+                  - CIDR
+                  - Value 
               - '24'
     Metadata:
       'AWS::CloudFormation::Designer':
@@ -749,11 +814,20 @@ Resources:
                 - Name: SourceOutput
               RunOrder: 1
               Configuration:
-                Owner: !Ref MyGitHubAccountName
-                Repo: !Ref MyGitHubFrontendRepositoryName
+                Owner: !FindInMap
+                  - Configuration
+                  - MyGitHubAccountName
+                  - Value 
+                Repo: !FindInMap
+                  - Configuration
+                  - MyGitHubFrontendRepositoryName
+                  - Value 
                 PollForSourceChanges: 'false'
                 Branch: master
-                OAuthToken: !Ref MyGitHubAuthToken
+                OAuthToken: !FindInMap
+                  - Configuration
+                  - MyGitHubAuthToken
+                  - Value 
         - Name: Build
           Actions:
             - Name: BuildAction
@@ -812,11 +886,20 @@ Resources:
                 - Name: SourceOutput
               RunOrder: 1
               Configuration:
-                Owner: !Ref MyGitHubAccountName
-                Repo: !Ref MyGitHubBackendRepositoryName
+                Owner: !FindInMap
+                  - Configuration
+                  - MyGitHubAccountName
+                  - Value 
+                Repo: !FindInMap
+                  - Configuration
+                  - MyGitHubBackendRepositoryName
+                  - Value 
                 PollForSourceChanges: 'false'
                 Branch: master
-                OAuthToken: !Ref MyGitHubAuthToken
+                OAuthToken: !FindInMap
+                  - Configuration
+                  - MyGitHubAuthToken
+                  - Value 
         - Name: Build
           Actions:
             - Name: BuildAction
