@@ -21,9 +21,9 @@ Mappings:
     MyGitHubAuthToken:
       "Value": "a452651705"
     S3FrontendBucketName: 
-      "Value": "P3Frontend-Bz88J7zHshM7"
+      "Value": "st8-s3frontend-89xd91g44lb5"
     S3ImageBucketName:
-      "Value": "P3Backend-AJDbR0yG6zU6	"
+      "Value": "st8-s3image-lc5429sy7ph0"
     LambdaFunctionName: 
       "Value": "st8lf"
     CIDR: 
