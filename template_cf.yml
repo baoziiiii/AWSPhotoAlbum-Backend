@@ -6,20 +6,17 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF1
-      FunctionName: p3LF1_release
-      # FunctionName: st8lf1
+      # FunctionName: p3LF1_release
+      FunctionName: st8lf1
       Handler: lambda_function.lambda_handler
-      Role: arn:aws:iam::591736655990:role/PipelineStack-p3LF1Role-1XNL4T65GFSFA
       Runtime: python3.7
     DeletionPolicy: Retain
   p3LF2:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF2
-      FunctionName: p3LF2_release
-      # FunctionName: st8lf2
-      Role: 
+      # FunctionName: p3LF2_release
+      FunctionName: st8lf2
       Handler: lambda_function.lambda_handler
       Runtime: python3.7
-      
     DeletionPolicy: Retain
