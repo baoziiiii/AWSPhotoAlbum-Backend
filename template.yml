@@ -6,7 +6,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF1
-      FunctionName: st8lf1
+      FunctionName: p3LF1_release
       Handler: lambda_function.lambda_handler
       Runtime: python3.7
     DeletionPolicy: Retain
@@ -14,7 +14,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./p3LF2
-      FunctionName: st8lf2
+      FunctionName: p3LF2_release
       Handler: lambda_function.lambda_handler
       Runtime: python3.7
     DeletionPolicy: Retain
