@@ -6,7 +6,7 @@ import time
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
 
-
+# aaaaaaa
 
 s3 = boto3.client("s3")
 
@@ -24,6 +24,7 @@ def list_picture(key,labels):
     return r
 
 
+
 ## IMPORTANT: get picture raw binary data
 def get_raw_picture(key):
     r =  s3.get_object(
@@ -35,7 +36,7 @@ def get_raw_picture(key):
     return None
 
 
-def list_all_pictures(prefix = 'images/',maxkeys = 100, reset = True, key_word=''):
+def list_all_pictures(key_words, prefix = 'images/',maxkeys = 100, reset = True):
     if reset:
         del images[:]
     # response = s3.list_objects(
@@ -49,7 +50,8 @@ def list_all_pictures(prefix = 'images/',maxkeys = 100, reset = True, key_word='
     #         images.append(list_picture(key))
     
     # connect to vpc
-    host = 'vpc-photos2-wc7ewp7gezc7jkxe5sumk4wxni.us-east-1.es.amazonaws.com' 
+    # host = 'vpc-photos2-wc7ewp7gezc7jkxe5sumk4wxni.us-east-1.es.amazonaws.com' 
+    host = 'vpc-photos-p6stlstqc4owdhc3u2unxkrhba.us-east-1.es.amazonaws.com'
     region = 'us-east-1' # e.g. us-west-1
     
     # connect to es
@@ -66,60 +68,93 @@ def list_all_pictures(prefix = 'images/',maxkeys = 100, reset = True, key_word='
     )
     
    
-    # change key_word to from list to string
-    #search_word=' '.join(key_word)
-    # search key_word as tag 
-    query_body = {
-      "size": 20,
-      "query": {
-        "query_string": {
-          "query": key_word,
-          "default_field": "labels"
-        }
-      }
-    }
-    
-    # check all records in es
-    #print(es.indices.get_alias("*") )
-    
-    # search tag
-    res = es.search(index="photos", body=query_body)
-    #print (res)
-    
-   # for content in response["Contents"]:
-        # key = content["Key"]
-        # if key != 'images/':
-    for records in res['hits']['hits']:
-        key = records['_source']['objectkey']
-        #print(key)
-        labels = records['_source']['labels']
-        images.append(list_picture(key,labels))
+    # change key_words to from list to string
+    #search_word=' '.join(key_words)
+    # search key_words as tag 
+    print("images:",images)
+    print("key_words:",key_words)
+    for slot_name, slot_value in key_words.items():
+        if slot_value :
+            # query_body = {
+            #   "size": 20,
+            #   "query": {
+            #       "fuzzy":{
+            #         "query_string": {
+            #           "query": slot_value,
+            #           "default_field": "labels"
+            #           }
+            #         }
+            #     }
+            # }
+            query_body = {
+              "size": 20,
+              "query": {
+                  "fuzzy":{
+                    "labels": {
+                      "value": slot_value
+                      }
+                    }
+                }
+            }
+            
+            # check all records in es
+            #print(es.indices.get_alias("*") )
+            
+            # search tag
+            res = es.search(index="photos", body=query_body)
+            print ("=========res",res)
         
-    # print("images:",images)
+       # for content in response["Contents"]:
+            # key = content["Key"]
+            # if key != 'images/':
+            for records in res['hits']['hits']:
+                key = records['_source']['objectkey']
+                #print(key)
+                labels = records['_source']['labels']
+                print("---keys:",key)
+                images.append(list_picture(key,labels))
+                print("---images:",images)
+        # print("images:",images)
     return images
 
 images = [] 
 
 def lambda_handler(event, context):
-    
-    print(event)
-    
-    # TODO implement
-    # print(event)
+    print("EVENT ------{}".format(json.dumps(event)))
 
+    query_text = event['queryStringParameters']['q']
+    print("QUERY_TEXT ------{}".format(query_text))
+    
+    
+    key_words = {}
+    if len(query_text.split(" ")) > 1:
+        #Adding lex to disambiguation query_text
+        lex = boto3.client('lex-runtime', region_name = 'us-east-1')
 
-    query_text = event["queryStringParameters"]["q"]
-    #print(query_text) # it's query string
+        lex_response = lex.post_text(
+            botName = 'PhotoSearchBot',
+            botAlias = 'photosearchbot',
+            userId ='1234',
+            sessionAttributes={},
+            requestAttributes={},
+            inputText = query_text
+        )
+        print("LEX RESPONSE OF QUERY ------{}".format(json.dumps(lex_response)))
+        
+        key_words = lex_response['slots']
+    else:
+        key_words['q'] = query_text
+        
+    print("LEX RESPONSE SLOT ------{}".format(json.dumps(key_words)))
     
-    search_res = list_all_pictures(reset=True,key_word=query_text)
-    
+    #Es search using reponse _lots return value as tag
+    search_res = list_all_pictures(key_words=key_words, reset=True)
     print("all search photos:",images)
     
     returnBody = {
         "imagePaths":images
     }
-    
-    return {
+    returnContext = {
         'statusCode': 200,
         'headers': {
             "Content-Type" : "application/json",
@@ -128,5 +163,12 @@ def lambda_handler(event, context):
             "Access-Control-Allow-Methods" : "GET, OPTIONS, POST",
             "Access-Control-Allow-Headers" : "*"
         },
-        'body': str(returnBody)
+        'body': ""
     }
+    
+    if not returnBody["imagePaths"]:
+        returnContext['body'] = json.dumps("No photo found!")
+    else:
+        returnContext['body'] = str(returnBody)
+    
+    return returnContext
