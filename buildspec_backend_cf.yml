@@ -2,8 +2,11 @@ version: 0.2
 phases:
   build:
     commands:
-      - zip -r p3LF1.zip p3LF1/
-      - zip -r p3LF2.zip p3LF2/
+      - cd p3LF1
+      - zip -r ../p3LF1.zip *
+      - cd ../p3LF2
+      - zip -r ../p3LF2.zip *
+      - cd ..
       - zip -r layer.zip python/
       - aws lambda update-function-code --function-name hw3lf1 --zip-file fileb://p3LF1.zip
       - aws lambda update-function-code --function-name hw3lf2 --zip-file fileb://p3LF2.zip

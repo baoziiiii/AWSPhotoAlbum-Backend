@@ -2,10 +2,11 @@ version: 0.2
 phases:
   build:
     commands:
-      - zip -r p3LF1.zip p3LF1/
-      - zip -r p3LF2.zip p3LF2/
-      - aws s3 cp p3LF1.zip s3://p3code/p3LF1.zip
-      - aws s3 cp p3LF2.zip s3://p3code/p3LF2.zip
+      - cd p3LF1
+      - zip -r ../p3LF1.zip *
+      - cd ../p3LF2
+      - zip -r ../p3LF2.zip *
+      - cd ..
       - aws lambda update-function-code --function-name  p3LF1_release --zip-file fileb://p3LF1.zip
       - aws lambda update-function-code --function-name  p3LF2_release --zip-file fileb://p3LF2.zip
       # - aws cloudformation package --template-file template.yml --s3-bucket p3code --output-template-file outputtemplate.yml
