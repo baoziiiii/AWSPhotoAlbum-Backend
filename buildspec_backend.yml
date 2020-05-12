@@ -6,9 +6,15 @@ phases:
       - zip -r p3LF2.zip p3LF2/
       - aws s3 cp p3LF1.zip s3://p3code/p3LF1.zip
       - aws s3 cp p3LF2.zip s3://p3code/p3LF2.zip
-      - aws cloudformation package --template-file template.yml --s3-bucket p3code --output-template-file outputtemplate.yml
+      - aws lambda update-function-code \
+    --function-name  my-function \
+    --zip-file fileb://p3LF1.zip
+      - aws lambda update-function-code \
+    --function-name  my-function \
+    --zip-file fileb://p3LF2.zip
+      # - aws cloudformation package --template-file template.yml --s3-bucket p3code --output-template-file outputtemplate.yml
 artifacts:
   type: zip
-  files:
-    - template.json
-    - outputtemplate.yml
+  # files:
+  #   - template.json
+  #   - outputtemplate.yml
