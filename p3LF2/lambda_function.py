@@ -118,6 +118,7 @@ def list_all_pictures(key_words, prefix = 'images/',maxkeys = 100, reset = True)
 
 images = [] 
 
+
 def lambda_handler(event, context):
     print("EVENT ------{}".format(json.dumps(event)))
 
