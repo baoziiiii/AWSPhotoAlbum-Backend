@@ -1,0 +1,255 @@
+openapi: "3.0.1"
+info:
+  title: "AI Photo Search"
+  description: "AI Photo Search application, built during the Cloud and Big Data course\
+    \ at Columbia University."
+  version: "1.0.0"
+servers:
+- url: "https://a5v1z7waqb.execute-api.us-east-1.amazonaws.com/{basePath}"
+  variables:
+    basePath:
+      default: "/test"
+paths:
+  /transcribe:
+    get:
+      parameters:
+      - name: "aid"
+        in: "query"
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content: {}
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  /search:
+    get:
+      operationId: "searchPhotos"
+      parameters:
+      - name: "q"
+        in: "query"
+        schema:
+          type: "string"
+      responses:
+        500:
+          description: "500 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SearchResponse"
+        403:
+          description: "403 response"
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        uri: "arn:aws:apigateway:us-east-1:lambda:path/2015-03-31/functions/arn:aws:lambda:us-east-1:591736655990:function:p3LF2_release/invocations"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "POST"
+        contentHandling: "CONVERT_TO_TEXT"
+        type: "aws_proxy"
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+  /upload/{folder}/{item}:
+    put:
+      parameters:
+      - name: "Content-Type"
+        in: "header"
+        schema:
+          type: "string"
+      - name: "Accept"
+        in: "header"
+        schema:
+          type: "string"
+      - name: "item"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      - name: "folder"
+        in: "path"
+        required: true
+        schema:
+          type: "string"
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+          content: {}
+      security:
+      - api_key: []
+      x-amazon-apigateway-integration:
+        credentials: "arn:aws:iam::591736655990:role/HW3-API1"
+        uri: "arn:aws:apigateway:us-east-1:s3:path/p3b2/{folder}/{item}"
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        requestParameters:
+          integration.request.path.folder: "method.request.path.folder"
+          integration.request.header.Accept: "method.request.header.Accept"
+          integration.request.path.item: "method.request.path.item"
+          integration.request.header.Content-Type: "method.request.header.Content-Type"
+        passthroughBehavior: "when_no_match"
+        httpMethod: "PUT"
+        contentHandling: "CONVERT_TO_BINARY"
+        type: "aws"
+    options:
+      responses:
+        200:
+          description: "200 response"
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: "string"
+            Access-Control-Allow-Methods:
+              schema:
+                type: "string"
+            Access-Control-Allow-Headers:
+              schema:
+                type: "string"
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: "200"
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: "'OPTIONS,PUT'"
+              method.response.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+              method.response.header.Access-Control-Allow-Origin: "'*'"
+        passthroughBehavior: "when_no_match"
+        requestTemplates:
+          application/json: "{\"statusCode\": 200}"
+        type: "mock"
+components:
+  schemas:
+    Error:
+      type: "object"
+      properties:
+        code:
+          type: "integer"
+          format: "int32"
+        message:
+          type: "string"
+    Photo:
+      type: "object"
+      properties:
+        url:
+          type: "string"
+        labels:
+          type: "array"
+          items:
+            type: "string"
+    SearchResponse:
+      type: "object"
+      properties:
+        results:
+          type: "array"
+          items:
+            $ref: "#/components/schemas/Photo"
+  securitySchemes:
+    api_key:
+      type: "apiKey"
+      name: "x-api-key"
+      in: "header"
+x-amazon-apigateway-gateway-responses:
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: "'OPTIONS,PUT'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: "'GET,OPTIONS'"
+      gatewayresponse.header.Access-Control-Allow-Origin: "'*'"
+      gatewayresponse.header.Access-Control-Allow-Headers: "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'"
+x-amazon-apigateway-binary-media-types:
+- "image/"
+- "audio/"
