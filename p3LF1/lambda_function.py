@@ -12,7 +12,7 @@ def detect_labels(photo, bucket):
     response = client.detect_labels(Image={'S3Object':{'Bucket':bucket,'Name':photo}},
         MaxLabels=10)
 
-        
+
     # print (response)
     # print('Detected labels for ' + photo) 
     # print()   
@@ -39,7 +39,6 @@ def detect_labels(photo, bucket):
     for item in response['Labels']:
         res.append(item['Name'])
     return res
-
 
 
 def lambda_handler(event, context):
